@@ -9,15 +9,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { query } = req.query;
       
+      console.log("CNAE search request:", { query });
+      
       if (!query || typeof query !== 'string') {
+        console.log("Invalid query parameter");
         return res.status(400).json({ message: "Query parameter is required" });
       }
 
+      if (query.length < 2) {
+        console.log("Query too short");
+        return res.status(400).json({ message: "Query must be at least 2 characters long" });
+      }
+
       const results = await storage.searchCnae(query);
+      console.log(`Returning ${results.length} results for query: ${query}`);
       res.json(results);
     } catch (error) {
       console.error("Error searching CNAE:", error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ 
+        message: "Internal server error", 
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined 
+      });
     }
   });
 
@@ -94,6 +106,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "CNAE data seeded successfully" });
     } catch (error) {
       console.error("Error seeding CNAE data:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Initialize CNAE data if needed
+  app.get("/api/cnae/init", async (req, res) => {
+    try {
+      await storage.seedCnaeData();
+      res.json({ message: "CNAE data initialized successfully" });
+    } catch (error) {
+      console.error("Error initializing CNAE data:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });

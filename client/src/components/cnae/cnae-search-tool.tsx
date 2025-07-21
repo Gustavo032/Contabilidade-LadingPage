@@ -10,11 +10,31 @@ import type { CnaeData } from "@shared/schema";
 export default function CnaeSearchTool() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isInitializing, setIsInitializing] = useState(false);
 
-  const { data: searchResults, isLoading, error } = useQuery({
+  const { data: searchResults, isLoading, error, refetch } = useQuery({
     queryKey: ["/api/cnae/search", searchTerm],
     enabled: searchTerm.length >= 2,
+    retry: 1,
   });
+
+  // Função para inicializar dados CNAE se necessário
+  const initializeCnaeData = async () => {
+    try {
+      setIsInitializing(true);
+      const response = await fetch("/api/cnae/init");
+      if (response.ok) {
+        // Tentar buscar novamente após inicializar
+        if (searchTerm.length >= 2) {
+          refetch();
+        }
+      }
+    } catch (error) {
+      console.error("Error initializing CNAE data:", error);
+    } finally {
+      setIsInitializing(false);
+    }
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,9 +95,30 @@ export default function CnaeSearchTool() {
             {error && (
               <Card className="border-destructive">
                 <CardContent className="pt-6">
-                  <p className="text-destructive text-center">
-                    Erro ao buscar CNAEs. Tente novamente.
-                  </p>
+                  <div className="text-center">
+                    <p className="text-destructive mb-4">
+                      Erro ao buscar CNAEs. {error.message === 'Failed to fetch' ? 'Verifique sua conexão.' : 'Tente novamente.'}
+                    </p>
+                    <div className="flex gap-2 justify-center">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => refetch()}
+                        disabled={isLoading}
+                      >
+                        Tentar Novamente
+                      </Button>
+                      <Button 
+                        variant="secondary" 
+                        onClick={initializeCnaeData}
+                        disabled={isInitializing}
+                      >
+                        {isInitializing ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : null}
+                        Inicializar Dados
+                      </Button>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
