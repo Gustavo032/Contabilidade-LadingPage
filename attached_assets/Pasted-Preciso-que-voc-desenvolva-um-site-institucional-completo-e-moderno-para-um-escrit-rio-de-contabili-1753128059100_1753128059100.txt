@@ -1,0 +1,152 @@
+Preciso que você desenvolva um site institucional completo e moderno para um escritório de contabilidade chamado Contabilize Assessoria Empresarial.
+
+🧭 Objetivo do Projeto
+Criar um site elegante, funcional e útil para empresários, autônomos e prestadores de serviço que buscam informação, serviços e suporte contábil confiável, com destaque para ferramentas práticas e um sistema inteligente de consulta de CNAE.
+
+📌 Requisitos Gerais
+Interface moderna, responsiva e com boa performance
+
+Layout limpo, profissional e confiável (com destaque para o nome “Contabilize”)
+
+Foco em navegação intuitiva, otimização SEO e acessibilidade
+
+Sistema gerenciável (pode ser CMS ou admin customizável)
+
+🧱 Seções / Páginas Essenciais
+🏠 Página Inicial
+Apresentação da Contabilize
+
+Destaque dos serviços contábeis e diferenciais
+
+CTA: "Fale com um contador", "Abrir empresa", “Consulta CNAE”
+
+🧮 Serviços
+Abertura de empresa
+
+Regularização de CNPJ
+
+MEI, ME, EPP, Lucro Presumido, Simples Nacional
+
+Consultoria tributária
+
+Declaração de Imposto de Renda
+
+Atendimento PJ completo
+
+Cada serviço com uma landing page própria e CTA para contato.
+
+📊 Página de Consulta CNAE (diferencial principal!)
+Ferramenta onde o usuário pode:
+
+Pesquisar por palavra-chave (ex: "manicure", "consultoria", "salão", etc.)
+
+Pesquisar por código CNAE ou parte dele (ex: “8412” ou “8412-4/00”)
+
+Ao buscar, o sistema exibe:
+
+yaml
+Copiar
+Editar
+✅ CNAE: 8412-4/00  
+✅ Descrição completa da atividade  
+✅ Pode ser MEI? (sim/não)  
+✅ Está no Fator-R? (sim/não)  
+✅ Atividades permitidas  
+✅ Atividades não permitidas  
+✅ Observações  
+✅ Link para abrir empresa com esse CNAE via formulário
+✅ Sugestão de alternativas (se não for MEI, por exemplo)
+🔗 CTA estratégico ao final:
+"Ficou em dúvida? Fale com a Contabilize e escolha o melhor CNAE para pagar menos impostos."
+
+🔧 Ferramentas Úteis (página com links organizados)
+Organizar por seções:
+
+Contabilidade:
+
+Emissor gratuito de NF-e
+
+Calculadora Simples Nacional
+
+Gerador de DARF
+
+Tabela do INSS, IRRF, Salário Mínimo atualizada
+
+Utilitários Diversos:
+
+Consulta de CNPJ na Receita
+
+Consulta de débitos PGFN
+
+Parcelamento Simples Nacional
+
+Verificador de CPF/CNPJ
+
+Manuais e Downloads:
+
+Manuais de abertura de empresa
+
+Modelos de contrato
+
+Tabela de atividades MEI
+
+Links para planilhas úteis
+
+👥 Sobre a Contabilize
+História da empresa
+
+Missão, Visão, Valores
+
+Equipe contábil (fotos e mini bio, se desejar)
+
+Endereço, telefone, e-mail, redes sociais
+
+📞 Contato
+Formulário para falar com um contador
+
+Links diretos para WhatsApp e e-mail
+
+Integração com Google Maps
+
+📬 Blog (opcional)
+Publicações periódicas sobre temas contábeis, tributários e empresariais
+
+SEO otimizado (para ranquear palavras como "abrir empresa MEI", "contabilidade para salão", etc.)
+
+💡 Extras e Diferenciais Desejados
+Tema com modo claro/escuro (opcional)
+
+WhatsApp flutuante
+
+Formulários integrados com e-mail ou WhatsApp
+
+Página de agradecimento após formulário
+
+Integração com Google Analytics
+
+SEO técnico e boas práticas
+
+⚙️ Tecnologias Sugeridas
+Frontend: Next.js com TailwindCSS
+
+Backend (caso a busca CNAE seja dinâmica): Node.js ou Python (FastAPI)
+
+Banco de dados para armazenar as descrições CNAE: SQLite ou PostgreSQL
+
+CMS (opcional): Strapi, Sanity ou CMS personalizado para edição de conteúdo
+
+Hospedagem: Vercel (frontend), Railway/Render (backend)
+
+API de CNAE: Se não for utilizar base própria, usar dados públicos da Receita + tratamento local
+
+📦 Escalabilidade Futuramente
+Área do cliente com acesso a documentos
+
+Login para solicitar serviços
+
+Assinatura de contrato digital
+
+Chatbot contábil com IA
+
+Crie esse site com foco total na usabilidade, na confiança profissional e na utilidade para o visitante. A ferramenta de CNAE deve ser simples, rápida e funcional — um verdadeiro diferencial do projeto.
+
