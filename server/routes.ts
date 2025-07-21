@@ -1,7 +1,15 @@
+
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSchema, insertCnaeSchema } from "@shared/schema";
+
+// Interface para dados do IBGE
+interface IBGECnaeResponse {
+  id: string;
+  descricao: string;
+  observacoes?: string;
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // CNAE search endpoint
@@ -30,6 +38,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Internal server error", 
         error: process.env.NODE_ENV === 'development' ? error.message : undefined 
       });
+    }
+  });
+
+  // Get CNAE details from IBGE API
+  app.get("/api/cnae/:code/details", async (req, res) => {
+    try {
+      const { code } = req.params;
+      
+      console.log(`Fetching CNAE details for code: ${code}`);
+      
+      // Fetch from IBGE API
+      const response = await fetch(`https://servicodados.ibge.gov.br/api/v2/cnae/subclasses/${code}`);
+      
+      if (!response.ok) {
+        return res.status(404).json({ message: "CNAE não encontrado na base do IBGE" });
+      }
+      
+      const data: IBGECnaeResponse[] = await response.json();
+      
+      if (data && data.length > 0) {
+        const cnaeInfo = data[0];
+        res.json({
+          code: cnaeInfo.id,
+          description: cnaeInfo.descricao,
+          observations: cnaeInfo.observacoes || "",
+          source: "IBGE"
+        });
+      } else {
+        res.status(404).json({ message: "CNAE não encontrado" });
+      }
+    } catch (error) {
+      console.error("Error fetching CNAE details from IBGE:", error);
+      res.status(500).json({ message: "Erro ao consultar dados do IBGE" });
     }
   });
 
@@ -99,17 +140,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Seed CNAE data endpoint (for initial setup)
-  app.post("/api/seed-cnae", async (req, res) => {
-    try {
-      await storage.seedCnaeData();
-      res.json({ message: "CNAE data seeded successfully" });
-    } catch (error) {
-      console.error("Error seeding CNAE data:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
   // Initialize CNAE data if needed
   app.get("/api/cnae/init", async (req, res) => {
     try {
@@ -117,6 +147,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "CNAE data initialized successfully" });
     } catch (error) {
       console.error("Error initializing CNAE data:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Seed all CNAE data (development only)
+  app.post("/api/cnae/seed-all", async (req, res) => {
+    try {
+      if (process.env.NODE_ENV === 'production') {
+        return res.status(403).json({ message: "Not allowed in production" });
+      }
+      
+      const { seedAllCnaeData } = require('./seed-cnae');
+      await seedAllCnaeData();
+      res.json({ message: "All CNAE data seeded successfully" });
+    } catch (error) {
+      console.error("Error seeding all CNAE data:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
