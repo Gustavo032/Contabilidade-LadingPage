@@ -14,8 +14,13 @@ export default function CnaeSearchTool() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isInitializing, setIsInitializing] = useState(false);
 
-  const { data: searchResults, isLoading, error, refetch } = useQuery({
+  const { data: searchResults, isLoading, error, refetch } = useQuery<CnaeData[]>({
     queryKey: ["/api/cnae/search", searchTerm],
+    queryFn: async () => {
+      const response = await fetch(`/api/cnae/search?query=${encodeURIComponent(searchTerm)}`);
+      if (!response.ok) throw new Error("Erro ao buscar CNAEs");
+      return response.json();
+    },
     enabled: searchTerm.length >= 2,
     retry: 1,
   });

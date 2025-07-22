@@ -1,7 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { storage } from "./storage";
+import { FileStorage } from "./storage/fileStorage";
 
 const app = express();
 app.use(express.json());
@@ -69,14 +69,14 @@ app.use((req, res, next) => {
   }, () => {
     console.log(`Server running on port ${port}`);
 
-    // Initialize CNAE data on server start
-    (async () => {
-      try {
-        await storage.seedCnaeData();
-        console.log("CNAE data initialization completed");
-      } catch (error) {
-        console.error("Warning: Failed to initialize CNAE data:", error);
-      }
-    })();
+    // // Initialize CNAE data on server start
+    // (async () => {
+    //   try {
+    //     await FileStorage.seedCnaeData();
+    //     console.log("CNAE data initialization completed");
+    //   } catch (error) {
+    //     console.error("Warning: Failed to initialize CNAE data:", error);
+    //   }
+    // })();
   });
 })();
